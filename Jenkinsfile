@@ -17,7 +17,6 @@ node {
     println HUB_ORG
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
-    def toolbelt = tool 'toolbelt'
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -27,12 +26,12 @@ node {
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploy Code') {
             if (isUnix()) {
-                rc = sh returnStatus: true, script: "${toolbelt} auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --serverurl ${SFDC_HOST}"
+                rc = sh returnStatus: true, script: "sf auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --serverurl ${SFDC_HOST}"
             } else {
-                //bat "${toolbelt} plugins:install salesforcedx@49.5.0"
-                bat "${toolbelt} update"
-                //bat "${toolbelt} auth:logout -u ${HUB_ORG} -p"
-                rc = bat returnStatus: true, script: "${toolbelt} auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --serverurl ${SFDC_HOST}"
+                //bat "sf plugins:install salesforcedx@49.5.0"
+                bat "sf update"
+                //bat "sf auth:logout -u ${HUB_ORG} -p"
+                rc = bat returnStatus: true, script: "sf auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --serverurl ${SFDC_HOST}"
             }
 
             if (rc != 0) {
@@ -46,9 +45,9 @@ node {
 
             // need to pull out assigned username
             if (isUnix()) {
-                rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/ -u ${HUB_ORG}"
+                rmsg = sh returnStdout: true, script: "sf force:mdapi:deploy -d manifest/ -u ${HUB_ORG}"
             } else {
-                rmsg = bat returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/ -u ${HUB_ORG}"
+                rmsg = bat returnStdout: true, script: "sf force:mdapi:deploy -d manifest/ -u ${HUB_ORG}"
             }
 
             printf rmsg
