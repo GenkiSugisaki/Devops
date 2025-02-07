@@ -9,10 +9,10 @@ node {
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
 
     println 'KEY IS'
-    println JWT_KEY_CRED_ID
-    println HUB_ORG
-    println SFDC_HOST
-    println CONNECTED_APP_CONSUMER_KEY
+    println JWT_CRED_ID_DH
+    println HUB_ORG_DH
+    println SFDC_HOST_DH
+    println CONNECTED_APP_CONSUMER_KEY_DH
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
